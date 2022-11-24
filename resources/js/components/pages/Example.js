@@ -9,7 +9,7 @@ function Example() {
                 <div className="col-md-8">
                     <div className="card">
                         <div className="card-header">React導入できたわな？？</div>
-                        <div className="card-body">I'm an example component!</div>
+                        <div className="card-body">ページ下に移動できた？？</div>
                         <Button color={"secondary"} variant={"contained"}>ワイがMaterial-UIのボタンやな？？</Button>
                     </div>
                 </div>
