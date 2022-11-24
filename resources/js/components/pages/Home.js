@@ -8,21 +8,6 @@ import MainTable from "../MainTable";
 //ヘッダーのコンテンツ用の配列定義
 const headerList = ['名前', 'タスク内容', '編集', '完了'];
 
-//headerListの下あたりにrowsを定義する
-let rows = [
-    {
-        name: "モーリー",
-        content: "肩トレ",
-        editBtn: <Button color="secondary" variant="contained">編集</Button>,
-        deleteBtn: <Button color="primary" variant="contained">完了</Button>,
-    }, {
-        name: "ドンキーコング",
-        content: "バナナ補給",
-        editBtn: <Button color="secondary" variant="contained">編集</Button>,
-        deleteBtn: <Button color="primary" variant="contained">完了</Button>,
-    },
-];
-
 //スタイルの定義
 const useStyles = makeStyles((theme) => createStyles({
     card: {
@@ -56,6 +41,15 @@ function Home() {
                 console.log('通信に失敗しました');
             });
     }
+    let rows = [];
+    posts.map((post) =>
+        rows.push({
+            name: post.name,
+            content: post.content,
+            editBtn: <Button color="secondary" variant="contained">編集</Button>,
+            deleteBtn: <Button color="primary" variant="contained">完了</Button>,
+        })
+    );
         return (
             <div className="container">
                 <div className="row justify-content-center">
