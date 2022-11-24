@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import {Button, Card} from '@material-ui/core';
 import {makeStyles, createStyles} from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
@@ -14,7 +15,7 @@ let rows = [
         content: "肩トレ",
         editBtn: <Button color="secondary" variant="contained">編集</Button>,
         deleteBtn: <Button color="primary" variant="contained">完了</Button>,
-    },{
+    }, {
         name: "ドンキーコング",
         content: "バナナ補給",
         editBtn: <Button color="secondary" variant="contained">編集</Button>,
@@ -39,22 +40,37 @@ const useStyles = makeStyles((theme) => createStyles({
 function Home() {
     //定義したスタイルを利用するための設定
     const classes = useStyles();
+    const [posts, setPosts] = useState([""]);
 
-    return (
-        <div className="container">
-            <div className="row justify-content-center">
-                <div className="col-md-10">
-                    <div className="card">
-                        <h1>タスク管理</h1>
-                        <Card className={classes.card}>
-                            {/* テーブル部分の定義 */}
-                            <MainTable headerList={headerList} rows={rows} />
-                        </Card>
+    useEffect(() => {
+        getPostsData();
+    }, [])
+
+    const getPostsData = () => {
+        axios.get('/api/posts')
+            .then(response => {
+                setPosts(response.data);     //バックエンドから返ってきたデータでpostsを更新する
+                console.log(response.data);　//取得データ確認用のconsole.log()
+            })
+            .catch(() => {
+                console.log('通信に失敗しました');
+            });
+    }
+        return (
+            <div className="container">
+                <div className="row justify-content-center">
+                    <div className="col-md-10">
+                        <div className="card">
+                            <h1>タスク管理</h1>
+                            <Card className={classes.card}>
+                                {/* テーブル部分の定義 */}
+                                <MainTable headerList={headerList} rows={rows}/>
+                            </Card>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
-export default Home;
+    export default Home;
