@@ -15,7 +15,7 @@ class PostController extends Controller
         return response()->json($posts, 200);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $post = new Post;
         $post->name = $request->input("name");
@@ -24,19 +24,24 @@ class PostController extends Controller
         return response()->json($post, 200);
     }
 
-    // 編集画面に遷移するためのアクション
     public function edit(Request $request)
     {
         return Post::find($request->input("id"));
     }
 
-    //データを更新するためのアクション
     public function update(Request $request)
     {
         $post = Post::find($request->input("id"));
         $post->name = $request->input("name");
         $post->content = $request->input("content");
         $post->save();
+        return Post::all();
+    }
+
+    public function delete(Request $request)
+    {
+        $post = Post::find($request->input("id"));
+        $post->delete();
         return Post::all();
     }
 }

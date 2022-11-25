@@ -6,10 +6,8 @@ import purple from '@material-ui/core/colors/purple';
 import MainTable from "../MainTable";
 import PostForm from "../PostForm";
 
-//ヘッダーのコンテンツ用の配列定義
 const headerList = ['名前', 'タスク内容', '編集', '完了'];
 
-//スタイルの定義
 const useStyles = makeStyles((theme) => createStyles({
     card: {
         margin: theme.spacing(5),
@@ -24,7 +22,6 @@ const useStyles = makeStyles((theme) => createStyles({
 }));
 
 function Home() {
-    //定義したスタイルを利用するための設定
     const classes = useStyles();
     const [posts, setPosts] = useState([""]);
     const [formData, setFormData] = useState({name: '', content: ''});　　　　//追記
@@ -35,14 +32,13 @@ function Home() {
     const getPostsData = () => {
         axios.get('/api/posts')
             .then(response => {
-                setPosts(response.data);     //バックエンドから返ってきたデータでpostsを更新する
-                console.log(response.data);　//取得データ確認用のconsole.log()
+                setPosts(response.data);
+                console.log(response.data);
             })
             .catch(() => {
                 console.log('通信に失敗しました');
             });
     }
-    //入力がされたら（都度）入力値を変更するためのfunction
     const inputChange = (e) => {
         const key = e.target.name;
         formData[key] = e.target.value;
@@ -51,23 +47,30 @@ function Home() {
     }
 
     const createPost = async () => {
-        //空だと弾く
         if (formData == '') {
             return;
         }
-        //入力値を投げる
-        await axios
-            .post('/api/post/create', {
-                name: formData.name,
-                content: formData.content
-            })
+        await axios.post('/api/post/create', {
+            name: formData.name,
+            content: formData.content
+        })
             .then((res) => {
-                //戻り値をtodosにセット
                 const tempPosts = posts
                 tempPosts.push(res.data);
                 setPosts(tempPosts)
                 setFormData('');
             })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+    const deletePost = async (id) => {
+        await axios.post('/api/delete', {
+            id: id
+        }).then((res) => {
+            console.error("sdaddsa")
+            setPosts(res.data);
+        })
             .catch(error => {
                 console.log(error);
             });
@@ -78,8 +81,10 @@ function Home() {
         rows.push({
             name: post.name,
             content: post.content,
-            editBtn: <Button color="secondary" key={post.id} href={`/post/edit/${post.id}`} variant="contained">編集</Button>,
-            deleteBtn: <Button color="primary" variant="contained">完了</Button>,
+            editBtn: <Button color="secondary" key={post.id} href={`/post/edit/${post.id}`}
+                             variant="contained">編集</Button>,
+            deleteBtn: <Button color="primary" variant="contained" href="/"
+                               onClick={() => deletePost(post.id)}>完了</Button>,
         })
     );
     return (
